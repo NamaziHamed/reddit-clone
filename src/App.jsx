@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import Navbar from "./components/navbar";
+import SubredditGrid from "./components/SubredditGrid";
 import useSubredditStore from "./store/useSubredditStore";
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
   return (
     <>
       <Navbar />
+      <SubredditGrid />
     </>
   );
 }
