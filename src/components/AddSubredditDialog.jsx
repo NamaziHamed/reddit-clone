@@ -1,4 +1,6 @@
+import { useState } from "react";
 import useDialogStore from "../store/useDialogStore";
+import useSubredditStore from "../store/useSubredditStore";
 
 const AddSubredditDialog = () => {
   const {
@@ -8,13 +10,20 @@ const AddSubredditDialog = () => {
     setSubredditName,
     resetSubredditName,
   } = useDialogStore();
+  const addSubreddit = useSubredditStore((state) => state.addSubreddit);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Here you can add your logic to handle the subreddit creation
-    console.log("Subreddit name:", subredditName);
-    resetSubredditName();
-    closeDialog();
+    setError("");
+
+    const result = await addSubreddit(subredditName);
+    if (result.success) {
+      resetSubredditName();
+      closeDialog();
+    } else {
+      setError(result.error);
+    }
   };
 
   if (!isOpen) return null;
@@ -33,6 +42,7 @@ const AddSubredditDialog = () => {
               onChange={(e) => setSubredditName(e.target.value)}
               className="w-full p-2 border border-zinc-700 rounded mt-2 bg-zinc-800 text-gray-200 focus:outline-none focus:ring-2 focus:ring-orange-500"
             />
+            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
             <div className="flex justify-end gap-2 mt-4">
               <button
                 type="button"
